@@ -1,2 +1,6 @@
-1.1 
+1.1
 Pour la sécurité, cela evite d'écrire les mots de passe 
+
+2.2
+le container est éphémère et donc toute les données dans le container sont perdu s'il est supprimé
+l'ajout d'un volume permet de monter un répertoire de l'hote sur le container
