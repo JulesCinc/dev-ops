@@ -37,8 +37,8 @@ jobs:
       - name: SonarCloud Scan
         run: mvn -B verify sonar:sonar -Dsonar.projectKey=JulesCinc_dev-ops -Dsonar.organization=julescinc -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}  --file ./tp-docker/2-backend/simple-api/pom.xml
 
-  build-and-push-docker-image:
-    needs: test-sonar  # Ce job ne démarre QUE si 'test-backend' réussit
+  build-and-push-backend:
+    needs: test-sonar  
     runs-on: ubuntu-24.04
 
     steps:
@@ -55,13 +55,19 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/tp-devops-simple-api:latest
           push: ${{ github.ref == 'refs/heads/main' }} # Push SEULEMENT sur la branche 'main'
 
+  build-and-push-db:
+    needs: test-sonar  
+    runs-on: ubuntu-24.04
       - name: Build image and push database
         uses: docker/build-push-action@v6
         with:
           context: ./tp-docker/1-database
           tags: ${{ secrets.DOCKER_USERNAME }}/tp-devops-database:latest
           push: ${{ github.ref == 'refs/heads/main' }}
-
+          
+  build-and-push-backend:
+    needs: test-sonar  
+    runs-on: ubuntu-24.04
       - name: Build image and push httpd
         uses: docker/build-push-action@v6
         with:
