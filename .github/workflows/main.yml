@@ -26,7 +26,7 @@ jobs:
         run: mvn clean verify --file ./tp-docker/2-backend/simple-api/pom.xml
   # define job to build and publish docker image
       - name: SonarCloud Scan
-        run: mvn -B verify sonar:sonar -Dsonar.projectKey=JulesCinc_dev-ops -Dsonar.organization=julescinc -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}  --file .tp-docker/2-backend/simple-api/pom.xml
+        run: mvn -B verify sonar:sonar -Dsonar.projectKey=JulesCinc_dev-ops -Dsonar.organization=julescinc -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}  --file ./tp-docker/2-backend/simple-api/pom.xml
 
   build-and-push-docker-image:
     needs: test-backend  # Ce job ne démarre QUE si 'test-backend' réussit
