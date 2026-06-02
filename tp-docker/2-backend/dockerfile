@@ -1,0 +1,29 @@
+# Étape 1 : Build avec une image JDK+Maven
+FROM eclipse-temurin:21-jdk-alpine AS myapp-build
+ENV MYAPP_HOME=/opt/myapp
+WORKDIR $MYAPP_HOME
+
+# Ajout de maven (non présent dans l'image alpine de base)
+RUN apk add --no-cache maven
+
+# On copie d'abord le pom.xml pour profiter du cache Docker des dépendances
+COPY simple-api/pom.xml .
+# Télécharge les dépendances Maven en offline pour les builds suivants
+RUN mvn dependency:go-offline
+
+# Copie du code source
+COPY simple-api/src ./src
+
+# Build du projet
+RUN mvn package -DskipTests
+
+# Étape 2 : Runtime avec une image JRE plus légère
+FROM eclipse-temurin:21-jre-alpine
+ENV MYAPP_HOME=/opt/myapp
+WORKDIR $MYAPP_HOME
+
+# Copie du jar depuis l'étape de build
+COPY --from=myapp-build $MYAPP_HOME/target/*.jar $MYAPP_HOME/myapp.jar
+
+# Commande d'entrée
+ENTRYPOINT ["java", "-jar", "myapp.jar"]

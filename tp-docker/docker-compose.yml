@@ -1,0 +1,37 @@
+services:
+  database:
+    build: ./1-database
+    container_name: my-db-container 
+    networks:
+      - app-network
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  backend:
+    build: ./2-backend
+    container_name: my-backend-container
+    env_file:
+      - .env
+    networks:
+      - app-network
+    depends_on:
+      - database
+
+  httpd:
+    build: ./3-httpd
+    container_name: my-httpd-container
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+    depends_on:
+      - backend
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db-data:
