@@ -88,3 +88,4 @@ jobs:
           context: ./tp-docker/3-httpd
           tags: ${{ secrets.DOCKER_USERNAME }}/tp-devops-httpd:latest
           push: ${{ github.ref == 'refs/heads/main' }}
+          
