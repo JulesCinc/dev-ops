@@ -37,6 +37,35 @@ jobs:
       - name: SonarCloud Scan
         run: mvn -B verify sonar:sonar -Dsonar.projectKey=JulesCinc_dev-ops -Dsonar.organization=julescinc -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}  --file ./tp-docker/2-backend/simple-api/pom.xml
 
+  build-and-push-backend:
+    needs: test-sonar  
+    runs-on: ubuntu-24.04
+    if : github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ secrets.DOCKER_USERNAME }}/btp-devops-simple-api
+          tags: |
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=sha,format=short
+
+      - name: Login to DOCKER
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      - name: Build image and push backend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./tp-docker/2-backend # Le dossier où se trouve le Dockerfile pour l'API
+          tags: ${{ steps.meta.outputs.tags }}
+          push: ${{ github.ref == 'refs/heads/main' }} # Push SEULEMENT sur la branche 'main'
+
   build-and-push-db:
     needs: test-sonar  
     runs-on: ubuntu-24.04
@@ -51,11 +80,11 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-database
+            ${{ secrets.DOCKER_USERNAME }}/tp-devops-database
           tags: |
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
             type=sha,format=short
-      
+
       - name: Login to DOCKER
         run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
@@ -65,12 +94,12 @@ jobs:
           context: ./tp-docker/1-database
           tags: ${{ steps.meta.outputs.tags }}
           push: ${{ github.ref == 'refs/heads/main' }}
- 
+
   build-and-push-httpd:
     needs: test-sonar  
     runs-on: ubuntu-24.04
     if : github.ref == 'refs/heads/main'
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -80,7 +109,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd
+            ${{ secrets.DOCKER_USERNAME }}/tp-devops-httpd
           tags: |
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
             type=sha,format=short
