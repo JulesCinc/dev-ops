@@ -45,6 +45,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/backend
+          tags: |
+            type=raw,value=latest
+            type=sha,format=short
+
       - name: Login to DOCKER
         run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
@@ -52,7 +62,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./tp-docker/2-backend # Le dossier où se trouve le Dockerfile pour l'API
-          tags: ${{ secrets.DOCKER_USERNAME }}/tp-devops-simple-api:latest
+          tags: ${{ steps.meta.outputs.tags }}
           push: ${{ github.ref == 'refs/heads/main' }} # Push SEULEMENT sur la branche 'main'
 
   build-and-push-db:
@@ -62,6 +72,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/backend
+          tags: |
+            type=raw,value=latest
+            type=sha,format=short
+
       - name: Login to DOCKER
         run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
@@ -69,7 +89,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./tp-docker/1-database
-          tags: ${{ secrets.DOCKER_USERNAME }}/tp-devops-database:latest
+          tags: ${{ steps.meta.outputs.tags }}
           push: ${{ github.ref == 'refs/heads/main' }}
 
   build-and-push-httpd:
@@ -79,6 +99,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/backend
+          tags: |
+            type=raw,value=latest
+            type=sha,format=short
+
       - name: Login to DOCKER
         run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
@@ -86,6 +116,5 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./tp-docker/3-httpd
-          tags: ${{ secrets.DOCKER_USERNAME }}/tp-devops-httpd:latest
+          tags: ${{ steps.meta.outputs.tags }}
           push: ${{ github.ref == 'refs/heads/main' }}
-          
