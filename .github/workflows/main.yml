@@ -28,11 +28,6 @@ jobs:
     needs: test-backend
     runs-on: ubuntu-24.04
     steps:
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
       - name: SonarCloud Scan
         run: mvn -B verify sonar:sonar -Dsonar.projectKey=JulesCinc_dev-ops -Dsonar.organization=julescinc -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}  --file ./tp-docker/2-backend/simple-api/pom.xml
 
