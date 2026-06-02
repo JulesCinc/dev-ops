@@ -89,6 +89,4 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/tp-devops-httpd:latest
           push: ${{ github.ref == 'refs/heads/main' }}
 
-      
-
-
+  
