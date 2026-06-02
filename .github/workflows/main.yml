@@ -64,8 +64,8 @@ jobs:
           context: ./tp-docker/1-database
           tags: ${{ secrets.DOCKER_USERNAME }}/tp-devops-database:latest
           push: ${{ github.ref == 'refs/heads/main' }}
-          
-  build-and-push-backend:
+
+  build-and-push-httpd:
     needs: test-sonar  
     runs-on: ubuntu-24.04
       - name: Build image and push httpd
