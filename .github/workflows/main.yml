@@ -52,7 +52,7 @@ jobs:
           images: |
             ${{ secrets.DOCKERHUB_USERNAME }}/backend
           tags: |
-            type=raw,value=latest
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
             type=sha,format=short
 
       - name: Login to DOCKER
@@ -79,7 +79,7 @@ jobs:
           images: |
             ${{ secrets.DOCKERHUB_USERNAME }}/db
           tags: |
-            type=raw,value=latest
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
             type=sha,format=short
 
       - name: Login to DOCKER
@@ -106,7 +106,7 @@ jobs:
           images: |
             ${{ secrets.DOCKERHUB_USERNAME }}/httpd
           tags: |
-            type=raw,value=latest
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
             type=sha,format=short
 
       - name: Login to DOCKER
