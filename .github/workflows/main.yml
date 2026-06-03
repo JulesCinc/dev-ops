@@ -126,8 +126,6 @@ jobs:
   deploy:
     needs: build-and-push-backend
     runs-on: ubuntu-latest
-    environmement:
-      name: production
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
