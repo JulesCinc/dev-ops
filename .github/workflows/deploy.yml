@@ -1,12 +1,18 @@
 name: Deploy Infrastructure
 
 on:
-  push:
-    branches: [ main ]
+  workflow_run:
+    workflows: ["CI devops 2026"]
+    types:
+      - completed
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environement:
+      name: production
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
