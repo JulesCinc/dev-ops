@@ -25,7 +25,7 @@ jobs:
 
       - name: Run Ansible Playbook
         run: |
-          ansible-playbook -i ${{ secrets.REMOTE_HOST }}, playbook.yml \
+          ansible-playbook -i ${{ secrets.REMOTE_HOST }}, ansible/playbook.yml \
             -u ${{ secrets.REMOTE_USER }} \
             --private-key ~/.ssh/id_rsa \
             --extra-vars "db_user=usr db_password=${{ secrets.DB_PASSWORD }}"
