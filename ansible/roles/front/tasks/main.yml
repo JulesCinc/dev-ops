@@ -1,0 +1,9 @@
+---
+- name: front container
+  docker_container:
+    name: my-front-container
+    image: julescinc/tp-devops-front:latest
+    networks:
+      - name: front-network
+    restart_policy: on-failure
+    restart_retries: 3
