@@ -119,28 +119,4 @@ jobs:
           context: ./tp-docker/3-httpd
           tags: ${{ steps.meta.outputs.tags }}
           push: ${{ github.ref == 'refs/heads/main' }}
-  deploy:
-    needs: [build-and-push-backend, build-and-push-httpd, build-and-push-db]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Install Ansible
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ansible
-
-      - name: Run Ansible Playbook
-        run: |
-          ansible-playbook -i ${{ secrets.REMOTE_HOST }}, ansible/playbook.yml \
-            -u ${{ secrets.REMOTE_USER }} \
-            --private-key ~/.ssh/id_rsa \
-            --extra-vars "db_user=usr db_password=${{ secrets.DB_PASSWORD }}"
+  
