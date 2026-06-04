@@ -3,6 +3,7 @@
   docker_container:
     name: my-httpd-container
     image: julescinc/tp-devops-httpd:latest
+    pull: true
     networks:
       - name: front-network
     ports:

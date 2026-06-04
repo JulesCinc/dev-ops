@@ -3,6 +3,7 @@
   docker_container:
     name: my-db-container
     image: julescinc/tp-devops-database:latest
+    pull: true
     networks:
       - name: private-network
     volumes:

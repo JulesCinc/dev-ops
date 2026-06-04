@@ -3,6 +3,7 @@
   docker_container:
     name: my-backend-container
     image: julescinc/tp-devops-simple-api:latest
+    pull: true
     networks:
       - name: private-network
       - name: front-network

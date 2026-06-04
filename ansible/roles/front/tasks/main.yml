@@ -3,6 +3,7 @@
   docker_container:
     name: my-front-container
     image: julescinc/tp-devops-front:latest
+    pull: true
     networks:
       - name: front-network
     restart_policy: on-failure
