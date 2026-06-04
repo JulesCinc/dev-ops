@@ -124,7 +124,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           push: ${{ github.ref == 'refs/heads/main' }}
   deploy:
-    needs: build-and-push-backend
+    needs: [build-and-push-backend, build-and-push-httpd, build-and-push-db]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
